@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragments/layout :: head('About')}"/>
+</head>
+<body>
+
+<th:block th:replace="~{fragments/layout :: navbar}"/>
+
+<main class="page-content">
+    <h1>About StayEasy</h1>
+    <p>
+        StayEasy is a property rental platform that connects travelers with hosts offering
+        unique accommodations. Whether you're looking for a city apartment, a countryside
+        retreat, or a beachside villa — we've got you covered.
+    </p>
+    <h2>How It Works</h2>
+    <ol>
+        <li><strong>Browse</strong> — Explore available properties by location and amenities.</li>
+        <li><strong>Book</strong> — Send a reservation request to the host.</li>
+        <li><strong>Stay</strong> — Enjoy your stay and leave an honest review.</li>
+    </ol>
+    <h2>For Hosts</h2>
+    <p>
+        List your property for free, manage bookings, and connect with travelers from around the world.
+        Approve or decline reservation requests at your own pace.
+    </p>
+</main>
+
+<th:block th:replace="~{fragments/layout :: footer}"/>
+
+</body>
+</html>

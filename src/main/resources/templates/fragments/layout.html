@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- ========== NAVBAR FRAGMENT ========== -->
+<nav th:fragment="navbar" class="navbar">
+    <div class="nav-brand">
+        <a th:href="@{/}">🏠 StayEasy</a>
+    </div>
+    <div class="nav-links">
+        <a th:href="@{/properties}">Browse</a>
+        <a th:href="@{/about}">About</a>
+        <!-- Guest links (shown when NOT logged in) -->
+        <a th:href="@{/auth/login}" class="btn btn-outline">Login</a>
+        <a th:href="@{/auth/register}" class="btn btn-primary">Register</a>
+    </div>
+</nav>
+
+<!-- ========== FOOTER FRAGMENT ========== -->
+<footer th:fragment="footer" class="footer">
+    <p>&copy; 2026 StayEasy. All rights reserved.</p>
+</footer>
+
+<!-- ========== HEAD FRAGMENT (common CSS/meta) ========== -->
+<th:block th:fragment="head(title)">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${title} + ' | StayEasy'">StayEasy</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</th:block>
+
+</html>

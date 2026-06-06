@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments/layout :: head('Register')}"/>
+</head>
+<body>
+<th:block th:replace="~{fragments/layout :: navbar}"/>
+<main>
+  <div class="form-container">
+    <h1>Create Account</h1>
+    <form th:action="@{/auth/register}" th:object="${registerData}" method="post">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" th:field="*{username}" placeholder="Enter username"/>
+        <span class="field-error" th:if="${usernameTaken}">Username is already taken.</span>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" th:field="*{email}" placeholder="Enter email"/>
+        <span class="field-error" th:if="${emailTaken}">Email is already in use.</span>
+      </div>
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" th:field="*{firstName}" placeholder="Enter first name"/>
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" th:field="*{lastName}" placeholder="Enter last name"/>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" th:field="*{password}" placeholder="Enter password"/>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" th:field="*{confirmPassword}" placeholder="Confirm password"/>
+        <span class="field-error" th:if="${passwordMismatch}">Passwords do not match.</span>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Register</button>
+    </form>
+    <p style="text-align:center; margin-top:1rem;">
+      Already have an account? <a th:href="@{/auth/login}">Login here</a>
+    </p>
+  </div>
+</main>
+<th:block th:replace="~{fragments/layout :: footer}"/>
+</body>
+</html>

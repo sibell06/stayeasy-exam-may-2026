@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments/layout :: head('Edit Property')}"/>
+</head>
+<body>
+
+<th:block th:replace="~{fragments/layout :: navbar}"/>
+
+<main>
+  <div class="form-container" style="max-width:600px;">
+    <h1>Edit Property</h1>
+
+    <form th:action="@{/properties/{id}/edit(id=${propertyId})}" th:object="${propertyData}" method="post">
+
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" th:field="*{title}"/>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" th:field="*{description}"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location</label>
+        <input type="text" id="location" th:field="*{location}"/>
+      </div>
+
+      <div class="form-group">
+        <label for="type">Property Type</label>
+        <select id="type" th:field="*{type}">
+          <option th:each="type : ${propertyTypes}"
+                  th:value="${type}"
+                  th:text="${type}">
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="pricePerNight">Price per Night ($)</label>
+        <input type="number" id="pricePerNight" th:field="*{pricePerNight}" min="1" step="0.01"/>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+        <div class="form-group">
+          <label for="bedrooms">Bedrooms</label>
+          <input type="number" id="bedrooms" th:field="*{bedrooms}" min="0"/>
+        </div>
+        <div class="form-group">
+          <label for="bathrooms">Bathrooms</label>
+          <input type="number" id="bathrooms" th:field="*{bathrooms}" min="0"/>
+        </div>
+        <div class="form-group">
+          <label for="maxGuests">Max Guests</label>
+          <input type="number" id="maxGuests" th:field="*{maxGuests}" min="1"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="imageUrl">Image URL (optional)</label>
+        <input type="text" id="imageUrl" th:field="*{imageUrl}"/>
+      </div>
+
+      <div style="display:flex; gap:1rem; margin-top:1rem;">
+        <button type="submit" class="btn btn-primary" style="flex:1;">Save Changes</button>
+        <a th:href="@{/properties/{id}(id=${propertyId})}" class="btn btn-outline" style="flex:1; text-align:center;">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+</main>
+
+<th:block th:replace="~{fragments/layout :: footer}"/>
+
+</body>
+</html>

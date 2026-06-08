@@ -1,10 +1,12 @@
 package com.softuni.stayeasy.web;
 
 import com.softuni.stayeasy.model.dto.property.PropertyBindingModel;
+import com.softuni.stayeasy.model.dto.review.ReviewBindingModel;
 import com.softuni.stayeasy.model.entity.property.Property;
 import com.softuni.stayeasy.model.entity.property.PropertyType;
 import com.softuni.stayeasy.model.entity.user.User;
 import com.softuni.stayeasy.service.property.PropertyService;
+import com.softuni.stayeasy.service.review.ReviewService;
 import com.softuni.stayeasy.service.user.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -20,10 +22,12 @@ public class PropertyController {
 
     private final PropertyService propertyService;
     private final UserService userService;
+    private final ReviewService reviewService;
 
-    public PropertyController(PropertyService propertyService, UserService userService) {
+    public PropertyController(PropertyService propertyService, UserService userService, ReviewService reviewService) {
         this.propertyService = propertyService;
         this.userService = userService;
+        this.reviewService = reviewService;
     }
 
     // --- BROWSE ALL ---
@@ -37,14 +41,33 @@ public class PropertyController {
     // --- DETAILS ---
 
     @GetMapping("/{id}")
-    public String details(@PathVariable UUID id, Model model) {
+    public String details(@PathVariable UUID id,
+                          @RequestParam(required = false) String alreadyReviewed,
+                          @RequestParam(required = false) String ratingError,
+                          Model model,
+                          HttpSession session) {
         Optional<Property> propertyOpt = propertyService.findById(id);
 
         if(propertyOpt.isEmpty()){
             return "redirect:/properties";
         }
 
-        model.addAttribute("properties", propertyOpt.get());
+        Property property = propertyOpt.get();
+        model.addAttribute("property", property);
+        model.addAttribute("reviews", reviewService.findAllByProperty(property));
+        model.addAttribute("reviewData", new ReviewBindingModel());
+        model.addAttribute("alreadyReviewed", alreadyReviewed != null);
+        model.addAttribute("ratingError", ratingError != null);
+
+        // Check if current user already reviewed this property
+        if (session.getAttribute("userId") != null) {
+            UUID userId = (UUID) session.getAttribute("userId");
+            userService.findById(userId).ifPresent(user ->
+                    model.addAttribute("userAlreadyReviewed",
+                            reviewService.hasUserReviewedProperty(user, property))
+            );
+        }
+
         return "property/details";
     }
 

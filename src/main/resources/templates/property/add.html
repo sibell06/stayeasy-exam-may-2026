@@ -14,8 +14,8 @@
         <form th:action="@{/properties/add}" th:object="${propertyData}" method="post">
 
             <div class="form-group">
-                <label for="rating">Title</label>
-                <input type="text" id="rating" th:field="*{rating}" placeholder="e.g. Cozy apartment in the city center"/>
+                <label for="title">Title</label>
+                <input type="text" id="title" th:field="*{title}" placeholder="e.g. Cozy apartment in the city center"/>
             </div>
 
             <div class="form-group">
@@ -54,8 +54,8 @@
                     <input type="number" id="bathrooms" th:field="*{bathrooms}" min="0"/>
                 </div>
                 <div class="form-group">
-                    <label for="maxGuests">Max Guests</label>
-                    <input type="number" id="maxGuests" th:field="*{maxGuests}" min="1"/>
+                    <label for="maxGuest">Max Guests</label>
+                    <input type="number" id="maxGuest" th:field="*{maxGuest}" min="1"/>
                 </div>
             </div>
 

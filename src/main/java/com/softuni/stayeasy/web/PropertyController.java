@@ -80,7 +80,7 @@ public class PropertyController {
 
         }
         model.addAttribute("propertyData", new PropertyBindingModel());
-        model.addAttribute("propertyType", PropertyType.values());
+        model.addAttribute("propertyTypes", PropertyType.values());
         return "property/add";
     }
 
@@ -106,7 +106,7 @@ public class PropertyController {
                 .description(propertyData.getDescription())
                 .location(propertyData.getLocation())
                 .pricePerNight(propertyData.getPricePerNight())
-                .maxGuest(propertyData.getMaxGuests())
+                .maxGuest(propertyData.getMaxGuest())
                 .bedrooms(propertyData.getBedrooms())
                 .bathrooms(propertyData.getBathrooms())
                 .imageUrl(propertyData.getImageUrl())
@@ -149,12 +149,12 @@ public class PropertyController {
         propertyData.setTitle(property.getTitle());
         propertyData.setDescription(property.getDescription());
         propertyData.setLocation(property.getLocation());
-        propertyData.setPricePerNight(propertyData.getPricePerNight());
-        propertyData.setMaxGuests(propertyData.getMaxGuests());
-        propertyData.setBedrooms(propertyData.getBedrooms());
-        propertyData.setBathrooms(propertyData.getBathrooms());
-        propertyData.setImageUrl(propertyData.getImageUrl());
-        propertyData.setType(propertyData.getType());
+        propertyData.setPricePerNight(property.getPricePerNight());
+        propertyData.setMaxGuest(property.getMaxGuest());
+        propertyData.setBedrooms(property.getBedrooms());
+        propertyData.setBathrooms(property.getBathrooms());
+        propertyData.setImageUrl(property.getImageUrl());
+        propertyData.setType(property.getType());
 
         model.addAttribute("propertyData", propertyData);
         model.addAttribute("propertyTypes", PropertyType.values());
@@ -186,16 +186,16 @@ public class PropertyController {
 
         property.setTitle(propertyData.getTitle());
         property.setDescription(propertyData.getDescription());
-        property.setLocation(property.getLocation());
+        property.setLocation(propertyData.getLocation());
         property.setPricePerNight(propertyData.getPricePerNight());
-        property.setMaxGuest(propertyData.getMaxGuests());
+        property.setMaxGuest(propertyData.getMaxGuest());
         property.setBedrooms(propertyData.getBedrooms());
         property.setBathrooms(propertyData.getBathrooms());
         property.setImageUrl(propertyData.getImageUrl());
         property.setType(propertyData.getType());
 
         propertyService.updateProperty(property);
-        return "redirect:/properties" + id;
+        return "redirect:/properties/" + id;
 
     }
 

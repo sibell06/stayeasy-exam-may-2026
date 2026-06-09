@@ -13,7 +13,6 @@
 
     <div style="background:white; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,0.08); margin-top:1rem; overflow:hidden;">
 
-        <!-- Image -->
         <div style="height:300px; background:#e3eefe; display:flex; align-items:center; justify-content:center; overflow:hidden;">
             <img th:if="${property.imageUrl != null and !property.imageUrl.isEmpty()}"
                  th:src="${property.imageUrl}" th:alt="${property.title}"
@@ -23,7 +22,6 @@
 
         <div style="padding:2rem;">
 
-            <!-- Header -->
             <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
                 <div>
                     <span th:text="${property.type}" style="font-size:0.8rem; background:#e3eefe; color:#1a73e8; padding:3px 10px; border-radius:20px;"></span>
@@ -38,14 +36,12 @@
                 </div>
             </div>
 
-            <!-- Stats -->
             <div style="display:flex; gap:2rem; margin:1.5rem 0; padding:1rem; background:#f9f9f9; border-radius:8px;">
                 <span>🛏 <strong th:text="${property.bedrooms}"></strong> Bedrooms</span>
                 <span>🚿 <strong th:text="${property.bathrooms}"></strong> Bathrooms</span>
-                <span>👥 <strong th:text="${property.maxGuests}"></strong> Max Guests</span>
+                <span>👥 <strong th:text="${property.maxGuest}"></strong> Max Guests</span>
             </div>
 
-            <!-- Description -->
             <h2 style="font-size:1.2rem; margin-bottom:0.5rem;">About this property</h2>
             <p th:text="${property.description}" style="color:#555; line-height:1.7;"></p>
 
@@ -53,7 +49,6 @@
                 Hosted by <strong th:text="${property.host.firstName + ' ' + property.host.lastName}"></strong>
             </p>
 
-            <!-- Action buttons -->
             <div style="margin-top:2rem; display:flex; gap:1rem; flex-wrap:wrap;">
                 <a th:if="${session.userId != null}"
                    th:href="@{/reservations/create/{id}(id=${property.id})}"
@@ -74,13 +69,12 @@
         </div>
     </div>
 
-    <!-- ========== REVIEWS SECTION ========== -->
+    <!-- REVIEWS SECTION -->
     <div style="margin-top:2rem;">
         <h2 style="font-size:1.5rem; color:#1a73e8; margin-bottom:1rem;">
             Reviews (<span th:text="${#lists.size(reviews)}"></span>)
         </h2>
 
-        <!-- Error alerts -->
         <div class="alert alert-error" th:if="${alreadyReviewed}">
             You have already reviewed this property.
         </div>
@@ -88,13 +82,11 @@
             Rating must be between 1 and 5.
         </div>
 
-        <!-- No reviews -->
         <div th:if="${#lists.isEmpty(reviews)}"
              style="background:white; border-radius:12px; padding:2rem; text-align:center; color:#888; box-shadow:0 2px 10px rgba(0,0,0,0.07);">
             No reviews yet. Be the first to leave one!
         </div>
 
-        <!-- Reviews list -->
         <div th:each="review : ${reviews}"
              style="background:white; border-radius:12px; padding:1.5rem; margin-bottom:1rem; box-shadow:0 2px 10px rgba(0,0,0,0.07);">
             <div style="display:flex; justify-content:space-between; align-items:flex-start;">
@@ -106,7 +98,6 @@
                     <span style="color:#888; font-size:0.85rem; margin-left:0.5rem;"
                           th:text="${#temporals.format(review.createdOn, 'dd MMM yyyy')}"></span>
                 </div>
-                <!-- Delete button (only author) -->
                 <form th:if="${session.userId != null and session.userId == review.author.id}"
                       th:action="@{/reviews/delete/{id}(id=${review.id})}" method="post">
                     <button type="submit" class="btn btn-danger"
@@ -117,14 +108,11 @@
             <p th:text="${review.content}" style="margin-top:0.8rem; color:#555; line-height:1.6;"></p>
         </div>
 
-        <!-- ========== REVIEW FORM ========== -->
         <div th:if="${session.userId != null and !userAlreadyReviewed}"
              style="background:white; border-radius:12px; padding:1.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.07); margin-top:1rem;">
             <h3 style="margin-bottom:1rem;">Leave a Review</h3>
-
             <form th:action="@{/reviews/create/{id}(id=${property.id})}"
                   th:object="${reviewData}" method="post">
-
                 <div class="form-group">
                     <label for="rating">Rating (1-5)</label>
                     <select id="rating" th:field="*{rating}">
@@ -135,24 +123,20 @@
                         <option value="5">⭐⭐⭐⭐⭐ 5 - Excellent</option>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label for="content">Your Review</label>
                     <textarea id="content" th:field="*{content}"
                               placeholder="Share your experience..."></textarea>
                 </div>
-
                 <button type="submit" class="btn btn-primary">Submit Review</button>
             </form>
         </div>
 
-        <!-- Already reviewed message -->
         <div th:if="${session.userId != null and userAlreadyReviewed}"
              style="background:#f0f4ff; border-radius:8px; padding:1rem; color:#1a73e8; margin-top:1rem;">
             ✅ You have already reviewed this property.
         </div>
 
-        <!-- Guest prompt -->
         <div th:unless="${session.userId != null}"
              style="background:#f9f9f9; border-radius:8px; padding:1rem; text-align:center; margin-top:1rem;">
             <a th:href="@{/auth/login}" style="color:#1a73e8;">Login</a> to leave a review.

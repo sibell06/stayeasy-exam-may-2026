@@ -10,7 +10,7 @@ public class PropertyBindingModel {
     private String description;
     private String location;
     private BigDecimal pricePerNight;
-    private int maxGuests;
+    private int maxGuest;
     private int bedrooms;
     private int bathrooms;
     private String imageUrl;
@@ -48,12 +48,12 @@ public class PropertyBindingModel {
         this.pricePerNight = pricePerNight;
     }
 
-    public int getMaxGuests() {
-        return maxGuests;
+    public int getMaxGuest() {
+        return maxGuest;
     }
 
-    public void setMaxGuests(int maxGuests) {
-        this.maxGuests = maxGuests;
+    public void setMaxGuest(int maxGuest) {
+        this.maxGuest = maxGuest;
     }
 
     public int getBedrooms() {

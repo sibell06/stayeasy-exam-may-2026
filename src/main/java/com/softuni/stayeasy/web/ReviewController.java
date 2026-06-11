@@ -35,20 +35,21 @@ public class ReviewController {
 
     // --- CREATE ---
 
+    @PostMapping("/create/{propertyId}")
     public String create(@PathVariable UUID propertyId,
                          @ModelAttribute ReviewBindingModel reviewData,
                          HttpSession session) {
 
-        if (session.getAttribute("userId") != null) {
+        if (session.getAttribute("userId") == null) {
             return "redirect:/auth/login";
         }
 
         Optional<Property> propertyOpt = propertyService.findById(propertyId);
         if(propertyOpt.isEmpty()){
-            return "redirect:/property";
+            return "redirect:/properties";
 
         }
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString((String) session.getAttribute("userId"));
         Optional<User> authorOpt = userService.findById(userId);
         if(authorOpt.isEmpty()){
             return "redirect:/auth/login";
@@ -59,7 +60,7 @@ public class ReviewController {
 
         //Prevent duplicate reviews
         if(reviewService.hasUserReviewedProperty(author, property)){
-            return "redirect:/property" + propertyId + "?alreadyReviewed=true";
+            return "redirect:/properties/" + propertyId + "?alreadyReviewed=true";
         }
 
         Review review = Review.builder()
@@ -74,22 +75,22 @@ public class ReviewController {
     }
 
     // --- DELETE ---
-   @PostMapping("/delete/{reviewedId}")
+   @PostMapping("/delete/{reviewId}")
    public String delete(@PathVariable UUID reviewId,
                         HttpSession session) {
-        if (session.getAttribute("userId") != null) {
-            return "redirect:/auth/login";
-        }
+       if (session.getAttribute("userId") == null) {
+           return "redirect:/auth/login";
+       }
         Optional<Review> reviewOpt = reviewService.findById(reviewId);
         if(reviewOpt.isEmpty()){
             return "redirect:/properties";
 
         }
-        UUID userId = (UUID) session.getAttribute("userId");
+       UUID userId = UUID.fromString((String) session.getAttribute("userId"));
 
         //Only the author can delete their own review
        if (!reviewOpt.get().getAuthor().getId().equals(userId)) {
-           return "redirect:/properties" + reviewOpt.get().getProperty().getId();
+           return "redirect:/properties/" + reviewOpt.get().getProperty().getId();
        }
 
        UUID propertyId = reviewOpt.get().getProperty().getId();

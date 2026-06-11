@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Optional;
 
@@ -78,20 +79,26 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@ModelAttribute LoginBindingModel loginData,
                         Model model,
-                        HttpSession session) {
+                        HttpSession session,
+                        HttpServletRequest request) {
 
         Optional<User> userOpt = userService.findByUsername(loginData.getUsername());
 
-        // Use passwordEncoder.matches() to verify hashed password
         if (userOpt.isEmpty() || !passwordEncoder.matches(loginData.getPassword(), userOpt.get().getPassword())) {
             model.addAttribute("loginData", loginData);
             model.addAttribute("invalidCredentials", true);
             return "auth/login";
         }
 
-        session.setAttribute("userId", userOpt.get().getId());
+        session.setAttribute("userId", userOpt.get().getId().toString());
         session.setAttribute("username", userOpt.get().getUsername());
         session.setAttribute("userRole", userOpt.get().getRole().name());
+
+        // Redirect back to previous page if available
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.contains("/auth/")) {
+            return "redirect:" + referer;
+        }
 
         return "redirect:/";
     }

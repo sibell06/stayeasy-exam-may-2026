@@ -61,7 +61,7 @@ public class PropertyController {
 
         // Check if current user already reviewed this property
         if (session.getAttribute("userId") != null) {
-            UUID userId = (UUID) session.getAttribute("userId");
+            UUID userId = UUID.fromString((String) session.getAttribute("userId"));
             userService.findById(userId).ifPresent(user ->
                     model.addAttribute("userAlreadyReviewed",
                             reviewService.hasUserReviewedProperty(user, property))
@@ -93,7 +93,7 @@ public class PropertyController {
             return "redirect:/auth/login";
         }
 
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString((String) session.getAttribute("userId"));
         Optional<User> hostOpt = userService.findById(userId);
 
         if (hostOpt.isEmpty()){
@@ -137,7 +137,7 @@ public class PropertyController {
         }
 
         Property property = propertyOpt.get();
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString((String) session.getAttribute("userId"));
 
         //Only the host can edit their own property
 
@@ -178,7 +178,7 @@ public class PropertyController {
         }
 
         Property property = propertyOpt.get();
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString((String) session.getAttribute("userId"));
 
         if (!property.getHost().getId().equals(userId)){
             return "redirect:/properties";
@@ -214,7 +214,7 @@ public class PropertyController {
 
         }
 
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString((String) session.getAttribute("userId"));
         if (!propertyOpt.get().getHost().getId().equals(userId)){
             return "redirect:/properties";
         }

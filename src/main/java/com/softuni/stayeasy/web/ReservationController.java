@@ -17,8 +17,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @Controller
 @RequestMapping("/reservations")
 public class ReservationController {
@@ -42,7 +40,7 @@ public class ReservationController {
     public String createPage(@PathVariable UUID propertyId,
                              Model model,
                              HttpSession session) {
-        if(session.getAttribute("user") == null) {
+        if(session.getAttribute("userId") == null) {
             return "redirect:/auth/login";
         }
 
@@ -89,7 +87,7 @@ public class ReservationController {
             return "reservation/create";
         }
 
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString((String) session.getAttribute("userId"));
         Optional<User> renterOpt = userService.findById(userId);
         if (renterOpt.isEmpty()){
             return "redirect:/auth/login";
@@ -117,7 +115,7 @@ public class ReservationController {
         if (session.getAttribute("userId") == null) {
             return "redirect:/auth/login";
         }
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString((String) session.getAttribute("userId"));
         Optional<User> renterOpt = userService.findById(userId);
         if (renterOpt.isEmpty()){
             return "redirect:/auth/login";
@@ -139,7 +137,7 @@ public class ReservationController {
         if (reservationOpt.isEmpty()){
             return "redirect:/reservations/my";
         }
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString((String) session.getAttribute("userId"));
 
         //Only the renter can cancel their own reservation
         if(!reservationOpt.get().getRenter().getId().equals(userId)) {
@@ -156,7 +154,7 @@ public class ReservationController {
             return "redirect:/auth/login";
         }
 
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString((String) session.getAttribute("userId"));
         Optional<User> hostOpt = userService.findById(userId);
         if (hostOpt.isEmpty()){
             return "redirect:/auth/login";
@@ -185,7 +183,7 @@ public class ReservationController {
         if (reservationOpt.isEmpty()){
             return "redirect:/reservations/host";
         }
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString((String) session.getAttribute("userId"));
 
         //Only the of the property can approve
         if (!reservationOpt.get().getProperty().getHost().getId().equals(userId)) {
@@ -205,7 +203,7 @@ public class ReservationController {
         if (reservationOpt.isEmpty()){
             return "redirect:/reservations/host";
         }
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString((String) session.getAttribute("userId"));
 
         //Only the host of the property can reject
         if (!reservationOpt.get().getProperty().getHost().getId().equals(userId)) {

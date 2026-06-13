@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragments/layout :: head('Book Property')}"/>
+</head>
+<body>
+
+<th:block th:replace="~{fragments/layout :: navbar}"/>
+
+<main>
+    <div class="form-container" style="max-width:560px;">
+
+        <h1>Book This Property</h1>
+
+        <!-- Property summary -->
+        <div style="background:#f0f4ff; border-radius:8px; padding:1rem; margin-bottom:1.5rem;">
+            <h3 th:text="${property.title}" style="margin-bottom:0.3rem;"></h3>
+            <p style="color:#888; font-size:0.9rem;">📍 <span th:text="${property.location}"></span></p>
+            <p style="margin-top:0.5rem;">
+                <strong style="color:#1a73e8;">$<span th:text="${property.pricePerNight}"></span></strong>
+                <span style="color:#888;"> /night</span>
+                &nbsp;·&nbsp; 👥 Max <span th:text="${property.maxGuest}"></span> guests
+            </p>
+        </div>
+
+        <!-- Errors -->
+        <div class="alert alert-error" th:if="${pastDateError}">
+            Check-in date cannot be in the past.
+        </div>
+        <div class="alert alert-error" th:if="${dateError}">
+            Check-out must be at least 1 night after check-in date.
+        </div>
+        <div class="alert alert-error" th:if="${guestError}">
+            Number of guests must be between 1 and <span th:text="${property.maxGuest}"></span>.
+        </div>
+
+        <form th:action="@{/reservations/create/{id}(id=${property.id})}"
+              th:object="${reservationData}" method="post">
+
+            <div class="form-group">
+                <label for="checkIn">Check-in Date <span style="color:#e53935;">*</span></label>
+                <input type="date" id="checkIn" th:field="*{checkIn}" min=""/>
+                <span class="field-error" th:if="${#fields.hasErrors('checkIn')}" th:errors="*{checkIn}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="checkOut">Check-out Date <span style="color:#e53935;">*</span></label>
+                <input type="date" id="checkOut" th:field="*{checkOut}" min=""/>
+                <span class="field-error" th:if="${#fields.hasErrors('checkOut')}" th:errors="*{checkOut}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="guests">Number of Guests <span style="color:#e53935;">*</span></label>
+                <input type="number" id="guests" th:field="*{guests}" min="1"
+                       th:max="${property.maxGuest}" placeholder="e.g. 2"/>
+                <span class="field-error" th:if="${#fields.hasErrors('guests')}" th:errors="*{guests}"></span>
+            </div>
+
+            <div style="display:flex; gap:1rem; margin-top:1rem;">
+                <button type="submit" class="btn btn-primary" style="flex:1;">Confirm Booking</button>
+                <a th:href="@{/properties/{id}(id=${property.id})}"
+                   class="btn btn-outline" style="flex:1; text-align:center;">Cancel</a>
+            </div>
+
+        </form>
+    </div>
+</main>
+
+<th:block th:replace="~{fragments/layout :: footer}"/>
+
+<script th:src="@{/js/reservation.js}"></script>
+
+</body>
+</html>

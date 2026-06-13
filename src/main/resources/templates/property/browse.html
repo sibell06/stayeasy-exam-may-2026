@@ -43,7 +43,7 @@
                     <div style="display:flex; gap:1rem; margin-top:0.8rem; font-size:0.85rem; color:#666;">
                         <span>🛏 <span th:text="${property.bedrooms}"></span> Bed</span>
                         <span>🚿 <span th:text="${property.bathrooms}"></span> Bath</span>
-                        <span>👥 <span th:text="${property.maxGuests}"></span> Guests</span>
+                        <span>👥 <span th:text="${property.maxGuest}"></span> Guests</span>
                     </div>
                     <a th:href="@{/properties/{id}(id=${property.id})}" class="btn btn-primary" style="width:100%; margin-top:1rem; text-align:center;">View Details</a>
                 </div>

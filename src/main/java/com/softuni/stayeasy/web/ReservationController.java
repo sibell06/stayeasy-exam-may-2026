@@ -8,11 +8,14 @@ import com.softuni.stayeasy.service.property.PropertyService;
 import com.softuni.stayeasy.service.reservation.ReservationService;
 import com.softuni.stayeasy.service.user.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,7 +27,6 @@ public class ReservationController {
     private final ReservationService reservationService;
     private final PropertyService propertyService;
     private final UserService userService;
-
 
     public ReservationController(ReservationService reservationService,
                                  PropertyService propertyService,
@@ -40,12 +42,12 @@ public class ReservationController {
     public String createPage(@PathVariable UUID propertyId,
                              Model model,
                              HttpSession session) {
-        if(session.getAttribute("userId") == null) {
+        if (session.getAttribute("userId") == null) {
             return "redirect:/auth/login";
         }
 
         Optional<Property> propertyOpt = propertyService.findById(propertyId);
-        if (propertyOpt.isEmpty()){
+        if (propertyOpt.isEmpty()) {
             return "redirect:/properties";
         }
         model.addAttribute("property", propertyOpt.get());
@@ -55,41 +57,51 @@ public class ReservationController {
 
     @PostMapping("/create/{propertyId}")
     public String create(@PathVariable UUID propertyId,
-                         @ModelAttribute ReservationBindingModel reservationData,
+                         @Valid @ModelAttribute("reservationData") ReservationBindingModel reservationData,
+                         BindingResult bindingResult,
                          Model model,
                          HttpSession session) {
 
-        if(session.getAttribute("userId") == null) {
+        if (session.getAttribute("userId") == null) {
             return "redirect:/auth/login";
         }
-        Optional<Property> propertyOpt = propertyService.findById(propertyId);
 
-        if (propertyOpt.isEmpty()){
+        Optional<Property> propertyOpt = propertyService.findById(propertyId);
+        if (propertyOpt.isEmpty()) {
             return "redirect:/properties";
         }
 
         Property property = propertyOpt.get();
 
-        //Validate dates
-        if(reservationData.getCheckIn() == null || reservationData.getCheckOut() == null
-        || !reservationData.getCheckOut().isAfter(reservationData.getCheckIn())) {
-            model.addAttribute(("property"), property);
-            model.addAttribute("reservationData", reservationData);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("property", property);
+            return "reservation/create";
+        }
+
+        // Validate check-in is not in the past
+        if (reservationData.getCheckIn().isBefore(LocalDate.now())) {
+            model.addAttribute("property", property);
+            model.addAttribute("pastDateError", true);
+            return "reservation/create";
+        }
+
+        // Validate checkout is at least 1 night after checkin
+        if (!reservationData.getCheckOut().isAfter(reservationData.getCheckIn())) {
+            model.addAttribute("property", property);
             model.addAttribute("dateError", true);
             return "reservation/create";
         }
 
-        //Validate guests
-        if(reservationData.getGuests() < 1 || reservationData.getGuests() > property.getMaxGuest()) {
-            model.addAttribute(("property"), property);
-            model.addAttribute("reservationData", reservationData);
+        // Validate guests against property max
+        if (reservationData.getGuests() > property.getMaxGuest()) {
+            model.addAttribute("property", property);
             model.addAttribute("guestError", true);
             return "reservation/create";
         }
 
         UUID userId = UUID.fromString((String) session.getAttribute("userId"));
         Optional<User> renterOpt = userService.findById(userId);
-        if (renterOpt.isEmpty()){
+        if (renterOpt.isEmpty()) {
             return "redirect:/auth/login";
         }
 
@@ -110,6 +122,7 @@ public class ReservationController {
     }
 
     // --- MY RESERVATIONS (renter) ---
+
     @GetMapping("/my")
     public String myReservation(Model model, HttpSession session) {
         if (session.getAttribute("userId") == null) {
@@ -117,12 +130,11 @@ public class ReservationController {
         }
         UUID userId = UUID.fromString((String) session.getAttribute("userId"));
         Optional<User> renterOpt = userService.findById(userId);
-        if (renterOpt.isEmpty()){
+        if (renterOpt.isEmpty()) {
             return "redirect:/auth/login";
         }
         model.addAttribute("reservations", reservationService.findAllByRenter(renterOpt.get()));
         return "reservation/my-reservations";
-
     }
 
     // --- CANCEL (renter) ---
@@ -133,14 +145,12 @@ public class ReservationController {
             return "redirect:/auth/login";
         }
         Optional<Reservation> reservationOpt = reservationService.findById(id);
-
-        if (reservationOpt.isEmpty()){
+        if (reservationOpt.isEmpty()) {
             return "redirect:/reservations/my";
         }
         UUID userId = UUID.fromString((String) session.getAttribute("userId"));
 
-        //Only the renter can cancel their own reservation
-        if(!reservationOpt.get().getRenter().getId().equals(userId)) {
+        if (!reservationOpt.get().getRenter().getId().equals(userId)) {
             return "redirect:/reservations/my";
         }
         reservationService.cancelReservation(id);
@@ -148,68 +158,62 @@ public class ReservationController {
     }
 
     // --- HOST DASHBOARD ---
+
     @GetMapping("/host")
     public String hostDashboard(Model model, HttpSession session) {
-        if(session.getAttribute("userId") == null) {
+        if (session.getAttribute("userId") == null) {
             return "redirect:/auth/login";
         }
 
         UUID userId = UUID.fromString((String) session.getAttribute("userId"));
         Optional<User> hostOpt = userService.findById(userId);
-        if (hostOpt.isEmpty()){
+        if (hostOpt.isEmpty()) {
             return "redirect:/auth/login";
         }
 
-        //Get all properties owned by this host
         var hostProperties = propertyService.findAllByHost(hostOpt.get());
-
-        //Get all reservation for those properties
         var allReservations = hostProperties.stream()
                 .flatMap(p -> reservationService.findAllByProperty(p).stream())
                 .toList();
         model.addAttribute("reservations", allReservations);
         model.addAttribute("properties", hostProperties);
         return "reservation/host-dashboard";
-
     }
+
     // --- APPROVE / REJECT (host) ---
+
     @PostMapping("/{id}/approve")
-    public String approve(@PathVariable UUID id,
-                          HttpSession session){
+    public String approve(@PathVariable UUID id, HttpSession session) {
         if (session.getAttribute("userId") == null) {
             return "redirect:/auth/login";
         }
         Optional<Reservation> reservationOpt = reservationService.findById(id);
-        if (reservationOpt.isEmpty()){
+        if (reservationOpt.isEmpty()) {
             return "redirect:/reservations/host";
         }
         UUID userId = UUID.fromString((String) session.getAttribute("userId"));
 
-        //Only the of the property can approve
         if (!reservationOpt.get().getProperty().getHost().getId().equals(userId)) {
             return "redirect:/reservations/host";
         }
         reservationService.approveReservation(id);
         return "redirect:/reservations/host";
     }
-    @PostMapping("/{id}/reject")
-    public String reject(@PathVariable UUID id,
-                         HttpSession session){
 
+    @PostMapping("/{id}/reject")
+    public String reject(@PathVariable UUID id, HttpSession session) {
         if (session.getAttribute("userId") == null) {
             return "redirect:/auth/login";
         }
         Optional<Reservation> reservationOpt = reservationService.findById(id);
-        if (reservationOpt.isEmpty()){
+        if (reservationOpt.isEmpty()) {
             return "redirect:/reservations/host";
         }
         UUID userId = UUID.fromString((String) session.getAttribute("userId"));
 
-        //Only the host of the property can reject
         if (!reservationOpt.get().getProperty().getHost().getId().equals(userId)) {
             return "redirect:/reservations/host";
         }
-
         reservationService.rejectReservation(id);
         return "redirect:/reservations/host";
     }

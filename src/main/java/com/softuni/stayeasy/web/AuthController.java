@@ -5,9 +5,11 @@ import com.softuni.stayeasy.model.dto.user.RegisterBindingModel;
 import com.softuni.stayeasy.model.entity.user.User;
 import com.softuni.stayeasy.service.user.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +39,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute RegisterBindingModel registerData, Model model) {
+    public String register(@Valid @ModelAttribute("registerData") RegisterBindingModel registerData,
+                           BindingResult bindingResult,
+                           Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "auth/register";
+        }
 
         if (!registerData.getPassword().equals(registerData.getConfirmPassword())) {
             model.addAttribute("registerData", registerData);

@@ -9,8 +9,10 @@ import com.softuni.stayeasy.service.property.PropertyService;
 import com.softuni.stayeasy.service.review.ReviewService;
 import com.softuni.stayeasy.service.user.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -48,7 +50,7 @@ public class PropertyController {
                           HttpSession session) {
         Optional<Property> propertyOpt = propertyService.findById(id);
 
-        if(propertyOpt.isEmpty()){
+        if (propertyOpt.isEmpty()) {
             return "redirect:/properties";
         }
 
@@ -59,7 +61,6 @@ public class PropertyController {
         model.addAttribute("alreadyReviewed", alreadyReviewed != null);
         model.addAttribute("ratingError", ratingError != null);
 
-        // Check if current user already reviewed this property
         if (session.getAttribute("userId") != null) {
             UUID userId = UUID.fromString((String) session.getAttribute("userId"));
             userService.findById(userId).ifPresent(user ->
@@ -75,9 +76,8 @@ public class PropertyController {
 
     @GetMapping("/add")
     public String addPage(Model model, HttpSession session) {
-        if(session.getAttribute("userId") == null){
+        if (session.getAttribute("userId") == null) {
             return "redirect:/auth/login";
-
         }
         model.addAttribute("propertyData", new PropertyBindingModel());
         model.addAttribute("propertyTypes", PropertyType.values());
@@ -85,20 +85,25 @@ public class PropertyController {
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute PropertyBindingModel propertyData,
+    public String add(@Valid @ModelAttribute("propertyData") PropertyBindingModel propertyData,
+                      BindingResult bindingResult,
                       Model model,
                       HttpSession session) {
 
-        if(session.getAttribute("userId") == null){
+        if (session.getAttribute("userId") == null) {
             return "redirect:/auth/login";
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("propertyTypes", PropertyType.values());
+            return "property/add";
         }
 
         UUID userId = UUID.fromString((String) session.getAttribute("userId"));
         Optional<User> hostOpt = userService.findById(userId);
 
-        if (hostOpt.isEmpty()){
+        if (hostOpt.isEmpty()) {
             return "redirect:/auth/login";
-
         }
 
         Property property = Property.builder()
@@ -116,7 +121,6 @@ public class PropertyController {
 
         propertyService.createProperty(property);
         return "redirect:/properties";
-
     }
 
     // --- EDIT ---
@@ -126,22 +130,20 @@ public class PropertyController {
                            Model model,
                            HttpSession session) {
 
-        if (session.getAttribute("userId") == null){
+        if (session.getAttribute("userId") == null) {
             return "redirect:/auth/login";
         }
 
         Optional<Property> propertyOpt = propertyService.findById(id);
 
-        if(propertyOpt.isEmpty()){
+        if (propertyOpt.isEmpty()) {
             return "redirect:/properties";
         }
 
         Property property = propertyOpt.get();
         UUID userId = UUID.fromString((String) session.getAttribute("userId"));
 
-        //Only the host can edit their own property
-
-        if (!property.getHost().getId().equals(userId)){
+        if (!property.getHost().getId().equals(userId)) {
             return "redirect:/properties";
         }
 
@@ -160,27 +162,34 @@ public class PropertyController {
         model.addAttribute("propertyTypes", PropertyType.values());
         model.addAttribute("propertyId", id);
         return "property/edit";
-
     }
 
     @PostMapping("/{id}/edit")
     public String edit(@PathVariable UUID id,
-                       @ModelAttribute PropertyBindingModel propertyData,
+                       @Valid @ModelAttribute("propertyData") PropertyBindingModel propertyData,
+                       BindingResult bindingResult,
+                       Model model,
                        HttpSession session) {
 
-        if (session.getAttribute("userId") == null){
+        if (session.getAttribute("userId") == null) {
             return "redirect:/auth/login";
         }
 
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("propertyTypes", PropertyType.values());
+            model.addAttribute("propertyId", id);
+            return "property/edit";
+        }
+
         Optional<Property> propertyOpt = propertyService.findById(id);
-        if(propertyOpt.isEmpty()){
+        if (propertyOpt.isEmpty()) {
             return "redirect:/properties";
         }
 
         Property property = propertyOpt.get();
         UUID userId = UUID.fromString((String) session.getAttribute("userId"));
 
-        if (!property.getHost().getId().equals(userId)){
+        if (!property.getHost().getId().equals(userId)) {
             return "redirect:/properties";
         }
 
@@ -196,7 +205,6 @@ public class PropertyController {
 
         propertyService.updateProperty(property);
         return "redirect:/properties/" + id;
-
     }
 
     // --- DELETE ---
@@ -204,23 +212,21 @@ public class PropertyController {
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable UUID id,
                          HttpSession session) {
-        if (session.getAttribute("userId") == null){
+        if (session.getAttribute("userId") == null) {
             return "redirect:/auth/login";
-
         }
-        Optional<Property> propertyOpt = propertyService.findById(id);
-        if(propertyOpt.isEmpty()){
-            return "redirect:/properties";
 
+        Optional<Property> propertyOpt = propertyService.findById(id);
+        if (propertyOpt.isEmpty()) {
+            return "redirect:/properties";
         }
 
         UUID userId = UUID.fromString((String) session.getAttribute("userId"));
-        if (!propertyOpt.get().getHost().getId().equals(userId)){
+        if (!propertyOpt.get().getHost().getId().equals(userId)) {
             return "redirect:/properties";
         }
+
         propertyService.deleteProperty(id);
         return "redirect:/properties";
     }
-
-
 }

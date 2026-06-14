@@ -17,6 +17,8 @@ public interface PropertyService {
 
     Optional<Property> findById(UUID id);
 
+    Property findByIdOrThrow(UUID id);
+
     List<Property> findAllAvailable();
 
     List<Property> findAllByHost(User host);

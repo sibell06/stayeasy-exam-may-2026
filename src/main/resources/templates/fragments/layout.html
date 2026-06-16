@@ -9,9 +9,22 @@
     <div class="nav-links">
         <a th:href="@{/properties}">Browse</a>
         <a th:href="@{/about}">About</a>
-        <!-- Guest links (shown when NOT logged in) -->
-        <a th:href="@{/auth/login}" class="btn btn-outline">Login</a>
-        <a th:href="@{/auth/register}" class="btn btn-primary">Register</a>
+
+        <!-- Logged in links -->
+        <th:block th:if="${session.userId != null}">
+            <a th:href="@{/properties/add}">List Property</a>
+            <a th:href="@{/reservations/my}">My Reservations</a>
+            <a th:href="@{/reservations/host}">Host Dashboard</a>
+            <span style="color:#888;">|</span>
+            <span style="color:#444;" th:text="${session.username}"></span>
+            <a th:href="@{/auth/logout}" class="btn btn-outline">Logout</a>
+        </th:block>
+
+        <!-- Guest links -->
+        <th:block th:unless="${session.userId != null}">
+            <a th:href="@{/auth/login}" class="btn btn-outline">Login</a>
+            <a th:href="@{/auth/register}" class="btn btn-primary">Register</a>
+        </th:block>
     </div>
 </nav>
 
@@ -20,11 +33,11 @@
     <p>&copy; 2026 StayEasy. All rights reserved.</p>
 </footer>
 
-<!-- ========== HEAD FRAGMENT (common CSS/meta) ========== -->
-<th:block th:fragment="head(rating)">
+<!-- ========== HEAD FRAGMENT ========== -->
+<th:block th:fragment="head(title)">
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <rating th:text="${rating} + ' | StayEasy'">StayEasy</rating>
+    <title th:text="${title} + ' | StayEasy'">StayEasy</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </th:block>
 

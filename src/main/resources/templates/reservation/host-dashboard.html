@@ -1,63 +1,80 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:replace="~{fragments/layout :: head('Book Property')}"/>
+    <th:block th:replace="~{fragments/layout :: head('Host Dashboard')}"/>
 </head>
 <body>
 
 <th:block th:replace="~{fragments/layout :: navbar}"/>
 
-<main>
-    <div class="form-container" style="max-width:560px;">
+<main style="max-width:900px; margin:2rem auto; padding:0 1.5rem;">
 
-        <h1>Book This Property</h1>
+    <h1 style="font-size:2rem; color:#1a73e8; margin-bottom:1.5rem;">Host Dashboard</h1>
 
-        <!-- Property summary -->
-        <div style="background:#f0f4ff; border-radius:8px; padding:1rem; margin-bottom:1.5rem;">
-            <h3 th:text="${property.rating}" style="margin-bottom:0.3rem;"></h3>
-            <p style="color:#888; font-size:0.9rem;">📍 <span th:text="${property.location}"></span></p>
-            <p style="margin-top:0.5rem;">
-                <strong style="color:#1a73e8;">$<span th:text="${property.pricePerNight}"></span></strong>
-                <span style="color:#888;"> /night</span>
-                &nbsp;·&nbsp; 👥 Max <span th:text="${property.maxGuests}"></span> guests
-            </p>
-        </div>
-
-        <!-- Errors -->
-        <div class="alert alert-error" th:if="${dateError}">
-            Check-out date must be after check-in date.
-        </div>
-        <div class="alert alert-error" th:if="${guestError}">
-            Number of guests must be between 1 and <span th:text="${property.maxGuests}"></span>.
-        </div>
-
-        <form th:action="@{/reservations/create/{id}(id=${property.id})}"
-              th:object="${reservationData}" method="post">
-
-            <div class="form-group">
-                <label for="checkIn">Check-in Date</label>
-                <input type="date" id="checkIn" th:field="*{checkIn}"/>
-            </div>
-
-            <div class="form-group">
-                <label for="checkOut">Check-out Date</label>
-                <input type="date" id="checkOut" th:field="*{checkOut}"/>
-            </div>
-
-            <div class="form-group">
-                <label for="guests">Number of Guests</label>
-                <input type="number" id="guests" th:field="*{guests}" min="1"
-                       th:max="${property.maxGuests}"/>
-            </div>
-
-            <div style="display:flex; gap:1rem; margin-top:1rem;">
-                <button type="submit" class="btn btn-primary" style="flex:1;">Confirm Booking</button>
-                <a th:href="@{/properties/{id}(id=${property.id})}"
-                   class="btn btn-outline" style="flex:1; text-align:center;">Cancel</a>
-            </div>
-
-        </form>
+    <!-- Empty state -->
+    <div th:if="${#lists.isEmpty(reservations)}"
+         style="text-align:center; padding:4rem; background:white; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+        <p style="font-size:1.1rem; color:#888;">No reservations for your properties yet.</p>
+        <a th:href="@{/properties/add}" class="btn btn-primary" style="margin-top:1rem;">List a Property</a>
     </div>
+
+    <!-- Reservations list -->
+    <div th:unless="${#lists.isEmpty(reservations)}"
+         style="display:flex; flex-direction:column; gap:1rem;">
+
+        <div th:each="reservation : ${reservations}"
+             style="background:white; border-radius:12px; padding:1.5rem;
+                    box-shadow:0 2px 10px rgba(0,0,0,0.07);
+                    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+
+            <div>
+                <h3 th:text="${reservation.property.title}" style="margin-bottom:0.3rem;"></h3>
+                <p style="color:#888; font-size:0.9rem;">📍 <span th:text="${reservation.property.location}"></span></p>
+                <p style="margin-top:0.5rem; font-size:0.9rem;">
+                    👤 Renter: <strong th:text="${reservation.renter.username}"></strong>
+                </p>
+                <p style="font-size:0.9rem;">
+                    📅 <span th:text="${reservation.checkIn}"></span>
+                    → <span th:text="${reservation.checkOut}"></span>
+                    &nbsp;·&nbsp; 👥 <span th:text="${reservation.guests}"></span> guests
+                </p>
+                <p style="margin-top:0.3rem;">
+                    <strong>Total: $<span th:text="${reservation.totalPrice}"></span></strong>
+                </p>
+            </div>
+
+            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.5rem;">
+
+                <!-- Status badge -->
+                <span th:text="${reservation.status}"
+                      th:classappend="${reservation.status.name() == 'PENDING'} ? 'badge-pending'
+                                    : (${reservation.status.name() == 'APPROVED'} ? 'badge-approved'
+                                    : (${reservation.status.name() == 'REJECTED'} ? 'badge-rejected'
+                                    : 'badge-cancelled'))"
+                      style="padding:4px 12px; border-radius:20px; font-size:0.8rem; font-weight:600;">
+                </span>
+
+                <!-- Approve / Reject buttons (only if PENDING) -->
+                <div th:if="${reservation.status.name() == 'PENDING'}"
+                     style="display:flex; gap:0.5rem;">
+                    <form th:action="@{/reservations/{id}/approve(id=${reservation.id})}" method="post">
+                        <button type="submit" class="btn btn-primary"
+                                style="font-size:0.85rem; padding:0.4rem 1rem;">
+                            Approve
+                        </button>
+                    </form>
+                    <form th:action="@{/reservations/{id}/reject(id=${reservation.id})}" method="post">
+                        <button type="submit" class="btn btn-danger"
+                                style="font-size:0.85rem; padding:0.4rem 1rem;">
+                            Reject
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 </main>
 
 <th:block th:replace="~{fragments/layout :: footer}"/>

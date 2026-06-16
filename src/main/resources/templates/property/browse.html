@@ -11,15 +11,15 @@
     <div style="max-width:1200px; margin:0 auto; padding:2rem;">
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
-            <h1 style="font-size:2rem; color:#1a73e8;">Available Properties</h1>
+            <h1 style="font-family:'Cormorant Garamond',serif; font-size:2.4rem; font-weight:400; color:#3D3530;">Available Properties</h1>
             <a th:if="${session.userId != null}" th:href="@{/properties/add}" class="btn btn-primary">
-                + List Your Property
+                List Your Property
             </a>
         </div>
 
         <!-- No properties message -->
-        <div th:if="${#lists.isEmpty(properties)}" style="text-align:center; padding:4rem; color:#888;">
-            <p style="font-size:1.2rem;">No properties available at the moment.</p>
+        <div th:if="${#lists.isEmpty(properties)}" style="text-align:center; padding:4rem; color:#BFB0A3;">
+            <p style="font-size:1.1rem;">No properties available at the moment.</p>
             <a th:href="@{/}" class="btn btn-outline" style="margin-top:1rem;">Back to Home</a>
         </div>
 
@@ -30,22 +30,29 @@
                     <img th:if="${property.imageUrl != null and !property.imageUrl.isEmpty()}"
                          th:src="${property.imageUrl}"
                          th:alt="${property.title}"
-                         style="width:100%; height:180px; object-fit:cover;"/>
-                    <span th:unless="${property.imageUrl != null and !property.imageUrl.isEmpty()}">🏠</span>
+                         style="width:100%; height:190px; object-fit:cover;"/>
+                    <span th:unless="${property.imageUrl != null and !property.imageUrl.isEmpty()}"
+                          style="font-size:2rem; color:#BFB0A3; font-family:'Cormorant Garamond',serif;">No Image</span>
                 </div>
                 <div class="property-card-body">
-                    <span th:text="${property.type}" style="font-size:0.75rem; background:#e3eefe; color:#1a73e8; padding:2px 8px; border-radius:20px;"></span>
-                    <h3 th:text="${property.title}" style="margin-top:0.5rem;"></h3>
-                    <p class="location">📍 <span th:text="${property.location}"></span></p>
+                    <span th:text="${property.type}"
+                          style="font-size:0.72rem; background:#F0E8DF; color:#8B7B6B;
+                                 padding:3px 10px; border-radius:50px; letter-spacing:0.06em; text-transform:uppercase;"></span>
+                    <h3 th:text="${property.title}" style="margin-top:0.6rem;"></h3>
+                    <p class="location" th:text="${property.location}"></p>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem;">
-                        <span class="price">$<span th:text="${property.pricePerNight}"></span> <small style="font-weight:400; color:#888;">/night</small></span>
+                        <span class="price">$<span th:text="${property.pricePerNight}"></span>
+                            <small style="font-weight:300; color:#BFB0A3;">/night</small>
+                        </span>
                     </div>
-                    <div style="display:flex; gap:1rem; margin-top:0.8rem; font-size:0.85rem; color:#666;">
-                        <span>🛏 <span th:text="${property.bedrooms}"></span> Bed</span>
-                        <span>🚿 <span th:text="${property.bathrooms}"></span> Bath</span>
-                        <span>👥 <span th:text="${property.maxGuest}"></span> Guests</span>
+                    <div style="display:flex; gap:1.2rem; margin-top:0.8rem; font-size:0.82rem; color:#8B7B6B;">
+                        <span><span th:text="${property.bedrooms}"></span> Bed</span>
+                        <span><span th:text="${property.bathrooms}"></span> Bath</span>
+                        <span><span th:text="${property.maxGuest}"></span> Guests</span>
                     </div>
-                    <a th:href="@{/properties/{id}(id=${property.id})}" class="btn btn-primary" style="width:100%; margin-top:1rem; text-align:center;">View Details</a>
+                    <a th:href="@{/properties/{id}(id=${property.id})}"
+                       class="btn btn-primary"
+                       style="width:100%; margin-top:1rem; text-align:center;">View Details</a>
                 </div>
             </div>
         </div>

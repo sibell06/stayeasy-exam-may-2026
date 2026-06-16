@@ -34,7 +34,7 @@
             <div class="form-group">
                 <label for="type">Property Type</label>
                 <select id="type" th:field="*{type}">
-                    <option value="">-- Select type --</option>
+                    <option value="">— Select type —</option>
                     <option th:each="type : ${propertyTypes}"
                             th:value="${type}"
                             th:text="${type}">

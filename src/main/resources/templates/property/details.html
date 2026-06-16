@@ -9,44 +9,48 @@
 
 <main style="max-width:900px; margin:2rem auto; padding:0 1.5rem;">
 
-    <a th:href="@{/properties}" style="color:#1a73e8; font-size:0.9rem;">← Back to Properties</a>
+    <a th:href="@{/properties}" style="color:#C9967A; font-size:0.85rem; letter-spacing:0.04em;">← Back to Properties</a>
 
-    <div style="background:white; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,0.08); margin-top:1rem; overflow:hidden;">
+    <div style="background:#FDFAF6; border-radius:20px; box-shadow:0 2px 16px rgba(139,123,107,0.10); margin-top:1rem; overflow:hidden; border:1px solid rgba(201,150,122,0.15);">
 
-        <div style="height:300px; background:#e3eefe; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+        <div style="height:300px; background:#E8D5C4; display:flex; align-items:center; justify-content:center; overflow:hidden;">
             <img th:if="${property.imageUrl != null and !property.imageUrl.isEmpty()}"
                  th:src="${property.imageUrl}" th:alt="${property.title}"
                  style="width:100%; height:300px; object-fit:cover;"/>
-            <span th:unless="${property.imageUrl != null and !property.imageUrl.isEmpty()}" style="font-size:5rem;">🏠</span>
+            <span th:unless="${property.imageUrl != null and !property.imageUrl.isEmpty()}"
+                  style="font-size:1.5rem; color:#BFB0A3; font-family:'Cormorant Garamond',serif; letter-spacing:0.1em;">No Image</span>
         </div>
 
         <div style="padding:2rem;">
 
             <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
                 <div>
-                    <span th:text="${property.type}" style="font-size:0.8rem; background:#e3eefe; color:#1a73e8; padding:3px 10px; border-radius:20px;"></span>
-                    <h1 th:text="${property.title}" style="font-size:1.8rem; margin:0.5rem 0;"></h1>
-                    <p style="color:#888;">📍 <span th:text="${property.location}"></span></p>
+                    <span th:text="${property.type}"
+                          style="font-size:0.72rem; background:#F0E8DF; color:#8B7B6B;
+                                 padding:3px 10px; border-radius:50px; letter-spacing:0.06em; text-transform:uppercase;"></span>
+                    <h1 th:text="${property.title}"
+                        style="font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:400; margin:0.6rem 0; color:#3D3530;"></h1>
+                    <p style="color:#BFB0A3; font-size:0.9rem;" th:text="${property.location}"></p>
                 </div>
                 <div style="text-align:right;">
-                    <div style="font-size:1.8rem; font-weight:700; color:#1a73e8;">
+                    <div style="font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:500; color:#C9967A;">
                         $<span th:text="${property.pricePerNight}"></span>
-                        <span style="font-size:1rem; font-weight:400; color:#888;">/night</span>
+                        <span style="font-size:1rem; font-weight:300; color:#BFB0A3; font-family:'Jost',sans-serif;">/night</span>
                     </div>
                 </div>
             </div>
 
-            <div style="display:flex; gap:2rem; margin:1.5rem 0; padding:1rem; background:#f9f9f9; border-radius:8px;">
-                <span>🛏 <strong th:text="${property.bedrooms}"></strong> Bedrooms</span>
-                <span>🚿 <strong th:text="${property.bathrooms}"></strong> Bathrooms</span>
-                <span>👥 <strong th:text="${property.maxGuest}"></strong> Max Guests</span>
+            <div style="display:flex; gap:2rem; margin:1.5rem 0; padding:1rem; background:#F7F2EC; border-radius:10px; font-size:0.88rem; color:#8B7B6B;">
+                <span><strong th:text="${property.bedrooms}"></strong> Bedrooms</span>
+                <span><strong th:text="${property.bathrooms}"></strong> Bathrooms</span>
+                <span><strong th:text="${property.maxGuest}"></strong> Max Guests</span>
             </div>
 
-            <h2 style="font-size:1.2rem; margin-bottom:0.5rem;">About this property</h2>
-            <p th:text="${property.description}" style="color:#555; line-height:1.7;"></p>
+            <h2 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:400; margin-bottom:0.5rem; color:#3D3530;">About this property</h2>
+            <p th:text="${property.description}" style="color:#8B7B6B; line-height:1.8; font-size:0.95rem;"></p>
 
-            <p style="margin-top:1.5rem; color:#888; font-size:0.9rem;">
-                Hosted by <strong th:text="${property.host.firstName + ' ' + property.host.lastName}"></strong>
+            <p style="margin-top:1.5rem; color:#BFB0A3; font-size:0.88rem;">
+                Hosted by <strong style="color:#8B7B6B;" th:text="${property.host.firstName + ' ' + property.host.lastName}"></strong>
             </p>
 
             <div style="margin-top:2rem; display:flex; gap:1rem; flex-wrap:wrap;">
@@ -70,8 +74,8 @@
     </div>
 
     <!-- REVIEWS SECTION -->
-    <div style="margin-top:2rem;">
-        <h2 style="font-size:1.5rem; color:#1a73e8; margin-bottom:1rem;">
+    <div style="margin-top:2.5rem;">
+        <h2 style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:400; color:#3D3530; margin-bottom:1rem;">
             Reviews (<span th:text="${#lists.size(reviews)}"></span>)
         </h2>
 
@@ -83,52 +87,52 @@
         </div>
 
         <div th:if="${#lists.isEmpty(reviews)}"
-             style="background:white; border-radius:12px; padding:2rem; text-align:center; color:#888; box-shadow:0 2px 10px rgba(0,0,0,0.07);">
+             style="background:#FDFAF6; border-radius:16px; padding:2rem; text-align:center; color:#BFB0A3; border:1px solid rgba(201,150,122,0.15);">
             No reviews yet. Be the first to leave one!
         </div>
 
         <div th:each="review : ${reviews}"
-             style="background:white; border-radius:12px; padding:1.5rem; margin-bottom:1rem; box-shadow:0 2px 10px rgba(0,0,0,0.07);">
+             style="background:#FDFAF6; border-radius:16px; padding:1.5rem; margin-bottom:1rem; border:1px solid rgba(201,150,122,0.15);">
             <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                 <div>
-                    <strong th:text="${review.author.username}"></strong>
-                    <span style="color:#f59e0b; margin-left:0.5rem;">
-                        <th:block th:each="i : ${#numbers.sequence(1, review.rating)}">⭐</th:block>
+                    <strong style="color:#3D3530;" th:text="${review.author.username}"></strong>
+                    <span style="color:#C9967A; margin-left:0.5rem; font-size:0.85rem;">
+                        <th:block th:each="i : ${#numbers.sequence(1, review.rating)}">★</th:block>
                     </span>
-                    <span style="color:#888; font-size:0.85rem; margin-left:0.5rem;"
+                    <span style="color:#BFB0A3; font-size:0.82rem; margin-left:0.5rem;"
                           th:text="${#temporals.format(review.createdOn, 'dd MMM yyyy')}"></span>
                 </div>
                 <form th:if="${session.userId != null and session.userId == review.author.id}"
                       th:action="@{/reviews/delete/{id}(id=${review.id})}" method="post">
                     <button type="submit" class="btn btn-danger"
-                            style="font-size:0.8rem; padding:0.3rem 0.8rem;"
+                            style="font-size:0.78rem; padding:0.3rem 0.8rem;"
                             onclick="return confirm('Delete this review?')">Delete</button>
                 </form>
             </div>
-            <p th:text="${review.content}" style="margin-top:0.8rem; color:#555; line-height:1.6;"></p>
+            <p th:text="${review.content}" style="margin-top:0.8rem; color:#8B7B6B; line-height:1.7; font-size:0.93rem;"></p>
         </div>
 
         <div th:if="${session.userId != null and !userAlreadyReviewed}"
-             style="background:white; border-radius:12px; padding:1.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.07); margin-top:1rem;">
-            <h3 style="margin-bottom:1rem;">Leave a Review</h3>
+             style="background:#FDFAF6; border-radius:16px; padding:1.5rem; border:1px solid rgba(201,150,122,0.15); margin-top:1rem;">
+            <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:400; margin-bottom:1rem; color:#3D3530;">Leave a Review</h3>
             <form th:action="@{/reviews/create/{id}(id=${property.id})}"
                   th:object="${reviewData}" method="post">
                 <div class="form-group">
-                    <label for="rating">Rating (1-5) <span style="color:#e53935;">*</span></label>
+                    <label for="rating">Rating <span style="color:#C9967A;">*</span></label>
                     <select id="rating" th:field="*{rating}">
-                        <option value="0">-- Select rating --</option>
-                        <option value="1">⭐ 1 - Poor</option>
-                        <option value="2">⭐⭐ 2 - Fair</option>
-                        <option value="3">⭐⭐⭐ 3 - Good</option>
-                        <option value="4">⭐⭐⭐⭐ 4 - Very Good</option>
-                        <option value="5">⭐⭐⭐⭐⭐ 5 - Excellent</option>
+                        <option value="0">— Select rating —</option>
+                        <option value="1">1 — Poor</option>
+                        <option value="2">2 — Fair</option>
+                        <option value="3">3 — Good</option>
+                        <option value="4">4 — Very Good</option>
+                        <option value="5">5 — Excellent</option>
                     </select>
                     <span class="field-error" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></span>
                 </div>
                 <div class="form-group">
-                    <label for="content">Your Review <span style="color:#e53935;">*</span></label>
+                    <label for="content">Your Review <span style="color:#C9967A;">*</span></label>
                     <textarea id="content" th:field="*{content}"
-                              placeholder="Share your experience... (min 10 characters)"></textarea>
+                              placeholder="Share your experience..."></textarea>
                     <span class="field-error" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></span>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit Review</button>
@@ -136,13 +140,13 @@
         </div>
 
         <div th:if="${session.userId != null and userAlreadyReviewed}"
-             style="background:#f0f4ff; border-radius:8px; padding:1rem; color:#1a73e8; margin-top:1rem;">
-            ✅ You have already reviewed this property.
+             style="background:#F7F2EC; border-radius:10px; padding:1rem; color:#8B7B6B; margin-top:1rem; font-size:0.9rem;">
+            You have already reviewed this property.
         </div>
 
         <div th:unless="${session.userId != null}"
-             style="background:#f9f9f9; border-radius:8px; padding:1rem; text-align:center; margin-top:1rem;">
-            <a th:href="@{/auth/login}" style="color:#1a73e8;">Login</a> to leave a review.
+             style="background:#F7F2EC; border-radius:10px; padding:1rem; text-align:center; margin-top:1rem; font-size:0.9rem; color:#8B7B6B;">
+            <a th:href="@{/auth/login}" style="color:#C9967A;">Login</a> to leave a review.
         </div>
     </div>
 

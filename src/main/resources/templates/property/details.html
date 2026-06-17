@@ -62,7 +62,7 @@
                    th:href="@{/auth/login}"
                    class="btn btn-primary btn-large">Login to Book</a>
 
-                <th:block th:if="${session.userId != null and session.userId == property.host.id}">
+                <th:block th:if="${session.userId != null and session.userId == property.host.id.toString()}">
                     <a th:href="@{/properties/{id}/edit(id=${property.id})}" class="btn btn-outline">Edit</a>
                     <form th:action="@{/properties/{id}/delete(id=${property.id})}" method="post" style="display:inline;">
                         <button type="submit" class="btn btn-danger"
@@ -102,7 +102,7 @@
                     <span style="color:#BFB0A3; font-size:0.82rem; margin-left:0.5rem;"
                           th:text="${#temporals.format(review.createdOn, 'dd MMM yyyy')}"></span>
                 </div>
-                <form th:if="${session.userId != null and session.userId == review.author.id}"
+                <form th:if="${session.userId != null and session.userId == review.author.id.toString()}"
                       th:action="@{/reviews/delete/{id}(id=${review.id})}" method="post">
                     <button type="submit" class="btn btn-danger"
                             style="font-size:0.78rem; padding:0.3rem 0.8rem;"

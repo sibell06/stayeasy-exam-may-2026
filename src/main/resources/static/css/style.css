@@ -1,4 +1,33 @@
 /* ========================
+   Google Fonts Import
+======================== */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
+
+/* ========================
+   CSS Variables — Nude Palette
+======================== */
+:root {
+    --cream:        #F7F2EC;
+    --warm-white:   #FDFAF6;
+    --blush:        #E8D5C4;
+    --rose:         #C9967A;
+    --rose-dark:    #A67560;
+    --sage:         #9BAF9A;
+    --sage-dark:    #7A9279;
+    --taupe:        #8B7B6B;
+    --taupe-light:  #BFB0A3;
+    --charcoal:     #3D3530;
+    --glass-bg:     rgba(253, 250, 246, 0.72);
+    --glass-border: rgba(201, 150, 122, 0.18);
+    --shadow-soft:  0 4px 24px rgba(139, 123, 107, 0.10);
+    --shadow-card:  0 2px 16px rgba(139, 123, 107, 0.12);
+    --radius-sm:    10px;
+    --radius-md:    16px;
+    --radius-lg:    24px;
+    --radius-pill:  50px;
+}
+
+/* ========================
    Reset & Base
 ======================== */
 *, *::before, *::after {
@@ -8,17 +37,25 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #2d2d2d;
-    background-color: #f9f9f9;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    color: var(--charcoal);
+    background-color: var(--cream);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    letter-spacing: 0.01em;
 }
 
 a {
     text-decoration: none;
     color: inherit;
+}
+
+h1, h2, h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    letter-spacing: 0.02em;
 }
 
 /* ========================
@@ -28,104 +65,140 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 2.5rem;
-    background-color: #ffffff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    padding: 1.1rem 2.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
     position: sticky;
     top: 0;
     z-index: 100;
 }
 
 .nav-brand a {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1a73e8;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--rose);
+    letter-spacing: 0.04em;
 }
 
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    font-size: 0.95rem;
+    gap: 1.8rem;
+    font-size: 0.88rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
 .nav-links a {
-    color: #444;
+    color: var(--taupe);
     transition: color 0.2s;
 }
 
 .nav-links a:hover {
-    color: #1a73e8;
+    color: var(--rose);
+}
+
+.nav-links span {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--taupe-light);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0.02em;
 }
 
 /* ========================
    Buttons
 ======================== */
 .btn {
-    padding: 0.5rem 1.2rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: 600;
+    padding: 0.55rem 1.4rem;
+    border-radius: var(--radius-pill);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     cursor: pointer;
     border: none;
-    transition: all 0.2s;
+    transition: all 0.25s ease;
     display: inline-block;
 }
 
 .btn-primary {
-    background-color: #1a73e8;
-    color: white;
+    background-color: var(--rose);
+    color: var(--warm-white);
 }
 
 .btn-primary:hover {
-    background-color: #1558b0;
-    color: white;
+    background-color: var(--rose-dark);
+    color: var(--warm-white);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(166, 117, 96, 0.30);
 }
 
 .btn-outline {
-    border: 2px solid #1a73e8;
-    color: #1a73e8;
+    border: 1.5px solid var(--rose);
+    color: var(--rose);
     background: transparent;
 }
 
 .btn-outline:hover {
-    background-color: #1a73e8;
-    color: white;
+    background-color: var(--rose);
+    color: var(--warm-white);
 }
 
 .btn-danger {
-    background-color: #e53935;
+    background-color: #c17b6e;
     color: white;
 }
 
 .btn-danger:hover {
-    background-color: #b71c1c;
+    background-color: #a5604f;
+    transform: translateY(-1px);
 }
 
 .btn-large {
-    padding: 0.8rem 2rem;
-    font-size: 1.05rem;
+    padding: 0.85rem 2.4rem;
+    font-size: 0.9rem;
 }
 
 /* ========================
    Hero Section
 ======================== */
 .hero {
-    background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
-    color: white;
-    padding: 6rem 2rem;
+    background:
+            linear-gradient(160deg, rgba(232, 213, 196, 0.85) 0%, rgba(247, 242, 236, 0.70) 100%),
+            url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80') center/cover no-repeat;
+    color: var(--charcoal);
+    padding: 7rem 2rem;
     text-align: center;
+    position: relative;
 }
 
 .hero-content h1 {
-    font-size: 2.8rem;
-    margin-bottom: 1rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.6rem;
+    font-weight: 300;
+    margin-bottom: 1.2rem;
+    color: var(--charcoal);
+    line-height: 1.2;
+    letter-spacing: 0.03em;
 }
 
 .hero-content p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    opacity: 0.9;
+    font-size: 1.05rem;
+    margin-bottom: 2.4rem;
+    color: var(--taupe);
+    font-weight: 300;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.8;
 }
 
 /* ========================
@@ -137,26 +210,41 @@ a {
     gap: 2rem;
     padding: 4rem 2rem;
     flex-wrap: wrap;
+    background: var(--warm-white);
 }
 
 .feature-card {
-    background: white;
-    border-radius: 12px;
-    padding: 2rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 2.2rem;
     width: 280px;
     text-align: center;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    box-shadow: var(--shadow-card);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-soft);
 }
 
 .feature-card .icon {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     display: block;
     margin-bottom: 1rem;
 }
 
 .feature-card h3 {
-    margin-bottom: 0.5rem;
-    color: #1a73e8;
+    margin-bottom: 0.6rem;
+    color: var(--rose);
+    font-size: 1.3rem;
+}
+
+.feature-card p {
+    color: var(--taupe);
+    font-size: 0.92rem;
+    line-height: 1.7;
 }
 
 /* ========================
@@ -165,30 +253,32 @@ a {
 .page-content {
     max-width: 860px;
     margin: 3rem auto;
-    padding: 2rem;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    padding: 2.5rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
     flex: 1;
 }
 
 .page-content h1 {
-    font-size: 2rem;
+    font-size: 2.2rem;
     margin-bottom: 1rem;
-    color: #1a73e8;
+    color: var(--rose);
 }
 
 .page-content h2 {
     font-size: 1.4rem;
     margin: 1.5rem 0 0.5rem;
-    color: #333;
+    color: var(--taupe);
 }
 
 .page-content p,
 .page-content li {
-    line-height: 1.7;
-    color: #555;
+    line-height: 1.8;
+    color: var(--taupe);
     margin-bottom: 0.5rem;
+    font-size: 0.95rem;
 }
 
 .page-content ol {
@@ -202,46 +292,60 @@ a {
     max-width: 480px;
     margin: 3rem auto;
     padding: 2.5rem;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
 }
 
 .form-container h1 {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    color: #1a73e8;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 1.8rem;
+    color: var(--rose);
     text-align: center;
+    letter-spacing: 0.03em;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.3rem;
 }
 
 .form-group label {
-    font-weight: 600;
-    margin-bottom: 0.4rem;
-    font-size: 0.9rem;
-    color: #333;
+    font-weight: 500;
+    margin-bottom: 0.45rem;
+    font-size: 0.82rem;
+    color: var(--taupe);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-    padding: 0.6rem 0.9rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--blush);
+    border-radius: var(--radius-sm);
     font-size: 0.95rem;
-    transition: border-color 0.2s;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    color: var(--charcoal);
+    background: var(--warm-white);
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #1a73e8;
+    border-color: var(--rose);
+    box-shadow: 0 0 0 3px rgba(201, 150, 122, 0.12);
 }
 
 .form-group textarea {
@@ -251,9 +355,10 @@ a {
 
 /* Validation errors */
 .field-error {
-    color: #e53935;
-    font-size: 0.82rem;
+    color: #b56b58;
+    font-size: 0.81rem;
     margin-top: 0.3rem;
+    letter-spacing: 0.02em;
 }
 
 /* ========================
@@ -261,21 +366,22 @@ a {
 ======================== */
 .alert {
     padding: 0.9rem 1.2rem;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     margin-bottom: 1.2rem;
-    font-size: 0.92rem;
+    font-size: 0.9rem;
+    font-weight: 400;
 }
 
 .alert-success {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-    border: 1px solid #a5d6a7;
+    background-color: #eef4ec;
+    color: #5a7a55;
+    border: 1px solid #c3d9be;
 }
 
 .alert-error {
-    background-color: #ffebee;
-    color: #c62828;
-    border: 1px solid #ef9a9a;
+    background-color: #f9eeea;
+    color: #b56b58;
+    border: 1px solid #e8c4b8;
 }
 
 /* ========================
@@ -283,31 +389,32 @@ a {
 ======================== */
 .properties-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 1.8rem;
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .property-card {
-    background: white;
-    border-radius: 12px;
+    background: var(--warm-white);
+    border-radius: var(--radius-md);
     overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-card);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .property-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-soft);
 }
 
 .property-card-image {
     width: 100%;
-    height: 180px;
+    height: 190px;
     object-fit: cover;
-    background-color: #e3eefe;
+    background-color: var(--blush);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -315,34 +422,60 @@ a {
 }
 
 .property-card-body {
-    padding: 1.2rem;
+    padding: 1.3rem;
 }
 
 .property-card-body h3 {
-    font-size: 1.1rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
     margin-bottom: 0.4rem;
+    color: var(--charcoal);
 }
 
 .property-card-body .location {
-    color: #888;
-    font-size: 0.85rem;
+    color: var(--taupe-light);
+    font-size: 0.84rem;
     margin-bottom: 0.8rem;
 }
 
 .property-card-body .price {
-    font-weight: 700;
-    color: #1a73e8;
+    font-weight: 600;
+    color: var(--rose);
     font-size: 1.05rem;
+}
+
+/* ========================
+   Status Badges
+======================== */
+.badge-pending {
+    background: #f5e9d8;
+    color: #a07040;
+}
+
+.badge-approved {
+    background: #e8f0e8;
+    color: #5a7a55;
+}
+
+.badge-rejected {
+    background: #f5e5e2;
+    color: #b56b58;
+}
+
+.badge-cancelled {
+    background: #eeebe8;
+    color: var(--taupe);
 }
 
 /* ========================
    Footer
 ======================== */
 .footer {
-    background-color: #1a1a2e;
-    color: #aaa;
+    background-color: var(--charcoal);
+    color: var(--taupe-light);
     text-align: center;
-    padding: 1.5rem;
+    padding: 1.8rem;
     margin-top: auto;
-    font-size: 0.85rem;
+    font-size: 0.83rem;
+    letter-spacing: 0.06em;
 }

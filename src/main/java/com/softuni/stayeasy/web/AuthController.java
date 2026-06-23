@@ -5,12 +5,16 @@ import com.softuni.stayeasy.model.dto.user.RegisterBindingModel;
 import com.softuni.stayeasy.model.entity.user.User;
 import com.softuni.stayeasy.service.user.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Optional;
 
@@ -19,9 +23,11 @@ import java.util.Optional;
 public class AuthController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // --- REGISTER ---
@@ -33,23 +39,26 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute RegisterBindingModel registerData, Model model) {
+    public String register(@Valid @ModelAttribute("registerData") RegisterBindingModel registerData,
+                           BindingResult bindingResult,
+                           Model model) {
 
-        //Check if password match
-        if(!registerData.getPassword().equals(registerData.getConfirmPassword())) {
+        if (bindingResult.hasErrors()) {
+            return "auth/register";
+        }
+
+        if (!registerData.getPassword().equals(registerData.getConfirmPassword())) {
             model.addAttribute("registerData", registerData);
             model.addAttribute("passwordMismatch", true);
             return "auth/register";
         }
 
-        //Check if username is taken
         if (userService.existsByUsername(registerData.getUsername())) {
             model.addAttribute("registerData", registerData);
             model.addAttribute("usernameTaken", true);
             return "auth/register";
         }
 
-        //Check if email is taken
         if (userService.existsByEmail(registerData.getEmail())) {
             model.addAttribute("registerData", registerData);
             model.addAttribute("emailTaken", true);
@@ -63,6 +72,7 @@ public class AuthController {
                 registerData.getFirstName(),
                 registerData.getLastName()
         );
+
         return "redirect:/auth/login";
     }
 
@@ -77,23 +87,28 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@ModelAttribute LoginBindingModel loginData,
                         Model model,
-                        HttpSession session) {
+                        HttpSession session,
+                        HttpServletRequest request) {
+
         Optional<User> userOpt = userService.findByUsername(loginData.getUsername());
 
-        //Check if user and password matches
-        if (userOpt.isEmpty() || !userOpt.get().getPassword().equals(loginData.getPassword())) {
+        if (userOpt.isEmpty() || !passwordEncoder.matches(loginData.getPassword(), userOpt.get().getPassword())) {
             model.addAttribute("loginData", loginData);
             model.addAttribute("invalidCredentials", true);
             return "auth/login";
         }
 
-        //Store user in session
-        session.setAttribute("userId", userOpt.get().getId());
+        session.setAttribute("userId", userOpt.get().getId().toString());
         session.setAttribute("username", userOpt.get().getUsername());
         session.setAttribute("userRole", userOpt.get().getRole().name());
 
-        return "redirect:/";
+        // Redirect back to previous page if available
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.contains("/auth/")) {
+            return "redirect:" + referer;
+        }
 
+        return "redirect:/";
     }
 
     // --- LOGOUT ---
@@ -103,5 +118,4 @@ public class AuthController {
         session.invalidate();
         return "redirect:/";
     }
-
 }

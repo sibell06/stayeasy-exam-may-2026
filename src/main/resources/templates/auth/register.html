@@ -12,34 +12,40 @@
       <div class="form-group">
         <label for="username">Username</label>
         <input type="text" id="username" th:field="*{username}" placeholder="Enter username"/>
+        <span class="field-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
         <span class="field-error" th:if="${usernameTaken}">Username is already taken.</span>
       </div>
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" id="email" th:field="*{email}" placeholder="Enter email"/>
+        <span class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
         <span class="field-error" th:if="${emailTaken}">Email is already in use.</span>
       </div>
       <div class="form-group">
         <label for="firstName">First Name</label>
         <input type="text" id="firstName" th:field="*{firstName}" placeholder="Enter first name"/>
+        <span class="field-error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
       </div>
       <div class="form-group">
         <label for="lastName">Last Name</label>
         <input type="text" id="lastName" th:field="*{lastName}" placeholder="Enter last name"/>
+        <span class="field-error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
       </div>
       <div class="form-group">
         <label for="password">Password</label>
         <input type="password" id="password" th:field="*{password}" placeholder="Enter password"/>
+        <span class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
       </div>
       <div class="form-group">
         <label for="confirmPassword">Confirm Password</label>
         <input type="password" id="confirmPassword" th:field="*{confirmPassword}" placeholder="Confirm password"/>
+        <span class="field-error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
         <span class="field-error" th:if="${passwordMismatch}">Passwords do not match.</span>
       </div>
       <button type="submit" class="btn btn-primary" style="width:100%">Register</button>
     </form>
-    <p style="text-align:center; margin-top:1rem;">
-      Already have an account? <a th:href="@{/auth/login}">Login here</a>
+    <p style="text-align:center; margin-top:1.2rem; color:#8B7B6B; font-size:0.9rem;">
+      Already have an account? <a th:href="@{/auth/login}" style="color:#C9967A;">Login here</a>
     </p>
   </div>
 </main>

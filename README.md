@@ -1,66 +1,96 @@
-# 🏠 StayEasy — Property Rental Platform
+# StayEasy 🏠
+
+A property rental web application built with Spring Boot, allowing users to browse, list, and book properties.
 
 ## Tech Stack
-- **Java** 17
-- **Spring Boot** 3.4.0
-- **Spring MVC** + **Thymeleaf**
-- **Spring Data JPA** + **Hibernate**
-- **MySQL** (database)
-- **Maven** (build tool)
+
+- **Java 17**
+- **Spring Boot 3.4.0**
+- **Spring MVC + Thymeleaf**
+- **Spring Data JPA**
+- **MySQL 8.0**
+- **BCrypt** (via Spring Security Crypto)
+- **Maven**
 - **Lombok**
 
-## Features & Functionalities
+## Features
 
-### Roles
-| Role | Permissions |
-|------|-------------|
-| **Guest** | Browse properties, view details, register, login |
-| **Renter** | Make reservations, cancel reservations, write reviews |
-| **Host** | List/edit/delete properties, approve/reject reservations |
-| **Admin** | Manage all users and listings |
+### Authentication
+- User registration with BCrypt password hashing
+- Session-based login/logout
+- Access control based on session
 
-### Domain Functionalities
-1. **Create a reservation** — Renters can book available properties
-2. **Cancel a reservation** — Renters can cancel their pending bookings
-3. **Manage property listings** — Hosts can create, edit, and delete properties
-4. **Approve / Reject reservation** — Hosts review incoming booking requests
-5. **Write a review** — Renters can review a property after checkout
+### Properties
+- Browse all available properties
+- View property details with reviews
+- List a new property (logged-in users)
+- Edit and delete your own property (host only)
 
-### Pages
-| Page | Type |
-|------|------|
-| Home | Static |
-| About | Static |
-| Browse Properties | Dynamic |
-| Property Details | Dynamic |
-| Register / Login | Dynamic |
-| My Reservations | Dynamic |
-| Host Dashboard | Dynamic |
-| Add / Edit Property | Dynamic |
+### Reservations
+- Book a property with check-in/check-out dates and guest count
+- View your reservations with status (PENDING, APPROVED, REJECTED, CANCELLED)
+- Cancel a pending reservation (renter only)
+- Host dashboard to approve or reject reservations
+
+### Reviews
+- Leave a review with a rating (1-5 stars) for a property
+- One review per user per property
+- Delete your own review
+
+### Validation
+- Server-side form validation on all forms
+- Red error messages displayed next to invalid fields
+- Business rule enforcement (past dates blocked, guest limits enforced)
 
 ## Domain Entities
-- `User` — platform users (renters, hosts, admins)
-- `Property` — listings created by hosts
-- `Reservation` — bookings made by renters
-- `Review` — reviews left by renters after checkout
-- `Amenity` — features of a property (Wi-Fi, parking, etc.)
 
-## Setup Instructions
+- **User** — stores account info, role (RENTER), and BCrypt hashed password
+- **Property** — title, description, location, price, type, bedrooms, bathrooms, max guests
+- **Reservation** — check-in/check-out dates, guests, total price, status
+- **Review** — content, rating (1-5), linked to property and author
 
-1. Create a MySQL database:
-   ```sql
-   CREATE DATABASE stayeasy;
-   ```
+## Access Control
 
-2. Update `application.properties` with your MySQL credentials:
-   ```properties
-   spring.datasource.username=root
-   spring.datasource.password=your_password
-   ```
+| Page | Guest | Logged In |
+|------|-------|-----------|
+| Home, Browse, About | ✅ | ✅ |
+| Register, Login | ✅ | ✅ |
+| Property Details | ✅ | ✅ |
+| Add Property | ❌ | ✅ |
+| Edit/Delete Property | ❌ | Host only |
+| Book Property | ❌ | ✅ |
+| My Reservations | ❌ | ✅ |
+| Host Dashboard | ❌ | Host only |
+| Leave/Delete Review | ❌ | ✅ |
 
-3. Run the application:
-   ```bash
-   mvn spring-boot:run
-   ```
+## Setup
 
-4. Open your browser at: [http://localhost:8080](http://localhost:8080)
+### Prerequisites
+- Java 17
+- MySQL 8.0
+- Maven
+
+### Database
+Create a MySQL database:
+```sql
+CREATE DATABASE stayeasy;
+```
+
+### Configuration
+Update `src/main/resources/application.properties`:
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/stayeasy
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+```
+
+### Run
+```bash
+mvn spring-boot:run
+```
+
+The application will start on `http://localhost:8080`
+
+## Git Repository
+
+[GitHub](https://github.com/sibell06/stayeasy-exam-may-2026)

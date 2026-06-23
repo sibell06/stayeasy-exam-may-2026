@@ -16,46 +16,54 @@
             <div class="form-group">
                 <label for="title">Title</label>
                 <input type="text" id="title" th:field="*{title}" placeholder="e.g. Cozy apartment in the city center"/>
+                <span class="field-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
             </div>
 
             <div class="form-group">
                 <label for="description">Description</label>
                 <textarea id="description" th:field="*{description}" placeholder="Describe your property..."></textarea>
+                <span class="field-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
             </div>
 
             <div class="form-group">
                 <label for="location">Location</label>
                 <input type="text" id="location" th:field="*{location}" placeholder="e.g. Sofia, Bulgaria"/>
+                <span class="field-error" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></span>
             </div>
 
             <div class="form-group">
                 <label for="type">Property Type</label>
                 <select id="type" th:field="*{type}">
-                    <option value="">-- Select type --</option>
+                    <option value="">— Select type —</option>
                     <option th:each="type : ${propertyTypes}"
                             th:value="${type}"
                             th:text="${type}">
                     </option>
                 </select>
+                <span class="field-error" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></span>
             </div>
 
             <div class="form-group">
                 <label for="pricePerNight">Price per Night ($)</label>
                 <input type="number" id="pricePerNight" th:field="*{pricePerNight}" placeholder="e.g. 80" min="1" step="0.01"/>
+                <span class="field-error" th:if="${#fields.hasErrors('pricePerNight')}" th:errors="*{pricePerNight}"></span>
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
                 <div class="form-group">
                     <label for="bedrooms">Bedrooms</label>
                     <input type="number" id="bedrooms" th:field="*{bedrooms}" min="0"/>
+                    <span class="field-error" th:if="${#fields.hasErrors('bedrooms')}" th:errors="*{bedrooms}"></span>
                 </div>
                 <div class="form-group">
                     <label for="bathrooms">Bathrooms</label>
                     <input type="number" id="bathrooms" th:field="*{bathrooms}" min="0"/>
+                    <span class="field-error" th:if="${#fields.hasErrors('bathrooms')}" th:errors="*{bathrooms}"></span>
                 </div>
                 <div class="form-group">
-                    <label for="maxGuests">Max Guests</label>
-                    <input type="number" id="maxGuests" th:field="*{maxGuests}" min="1"/>
+                    <label for="maxGuest">Max Guests</label>
+                    <input type="number" id="maxGuest" th:field="*{maxGuest}" min="1"/>
+                    <span class="field-error" th:if="${#fields.hasErrors('maxGuest')}" th:errors="*{maxGuest}"></span>
                 </div>
             </div>
 

@@ -4,27 +4,45 @@
 <!-- ========== NAVBAR FRAGMENT ========== -->
 <nav th:fragment="navbar" class="navbar">
     <div class="nav-brand">
-        <a th:href="@{/}">🏠 StayEasy</a>
+        <a th:href="@{/}">StayEasy</a>
     </div>
     <div class="nav-links">
         <a th:href="@{/properties}">Browse</a>
         <a th:href="@{/about}">About</a>
-        <!-- Guest links (shown when NOT logged in) -->
-        <a th:href="@{/auth/login}" class="btn btn-outline">Login</a>
-        <a th:href="@{/auth/register}" class="btn btn-primary">Register</a>
+
+        <th:block th:if="${session.userId != null}">
+            <a th:href="@{/properties/add}">List Property</a>
+            <a th:href="@{/reservations/my}">My Reservations</a>
+            <a th:href="@{/reservations/host}">Host Dashboard</a>
+            <span style="color:#BFB0A3;">|</span>
+            <span style="color:#8B7B6B; font-style:italic; font-family:'Cormorant Garamond',serif;"
+                  th:text="${session.username}"></span>
+            <a th:href="@{/auth/logout}" class="btn btn-outline">Logout</a>
+        </th:block>
+
+        <th:block th:unless="${session.userId != null}">
+            <a th:href="@{/auth/login}" class="btn btn-outline">Login</a>
+            <a th:href="@{/auth/register}" class="btn btn-primary">Register</a>
+        </th:block>
     </div>
 </nav>
 
 <!-- ========== FOOTER FRAGMENT ========== -->
 <footer th:fragment="footer" class="footer">
     <p>&copy; 2026 StayEasy. All rights reserved.</p>
+    <p style="margin-top:0.3rem; font-size:0.78rem; opacity:0.6; font-family:'Cormorant Garamond',serif; letter-spacing:0.06em;">
+        Designed & developed by Sibel Hodzhova
+    </p>
 </footer>
 
-<!-- ========== HEAD FRAGMENT (common CSS/meta) ========== -->
+<!-- ========== HEAD FRAGMENT ========== -->
 <th:block th:fragment="head(title)">
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title th:text="${title} + ' | StayEasy'">StayEasy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </th:block>
 

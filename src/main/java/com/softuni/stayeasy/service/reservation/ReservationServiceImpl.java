@@ -1,5 +1,6 @@
 package com.softuni.stayeasy.service.reservation;
 
+import com.softuni.stayeasy.exception.ReservationNotFoundException;
 import com.softuni.stayeasy.model.entity.property.Property;
 import com.softuni.stayeasy.model.entity.reservation.Reservation;
 import com.softuni.stayeasy.model.entity.reservation.ReservationStatus;
@@ -17,8 +18,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    public ReservationServiceImpl(ReservationRepository reservationRepository, ReservationRepository reservationRepository1) {
-        this.reservationRepository = reservationRepository1;
+    public ReservationServiceImpl(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     @Override
@@ -30,26 +31,26 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public void cancelReservation(UUID id) {
-        reservationRepository.findById(id).ifPresent(reservation -> {
-            reservation.setStatus(ReservationStatus.CANCELLED);
-            reservationRepository.save(reservation);
-        });
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new ReservationNotFoundException("Reservation with id " + id + " not found"));
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservationRepository.save(reservation);
     }
 
     @Override
     public void approveReservation(UUID id) {
-        reservationRepository.findById(id).ifPresent(reservation -> {
-            reservation.setStatus(ReservationStatus.APPROVED);
-            reservationRepository.save(reservation);
-        });
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new ReservationNotFoundException("Reservation with id " + id + " not found"));
+        reservation.setStatus(ReservationStatus.APPROVED);
+        reservationRepository.save(reservation);
     }
 
     @Override
     public void rejectReservation(UUID id) {
-        reservationRepository.findById(id).ifPresent(reservation -> {
-            reservation.setStatus(ReservationStatus.REJECTED);
-            reservationRepository.save(reservation);
-        });
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new ReservationNotFoundException("Reservation with id " + id + " not found"));
+        reservation.setStatus(ReservationStatus.REJECTED);
+        reservationRepository.save(reservation);
     }
 
     @Override
